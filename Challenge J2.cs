@@ -15,6 +15,8 @@ public class Person
     public int posY { get; set; }
     public int health { get; set; }
     public string role { get; set; }
+    public int vx; 
+    public int vy;
     public double distance;
 
 }
@@ -27,6 +29,8 @@ public class Spider{
     public int threatFor; 
     public int nearBase; 
     public int health;
+    public int vx; 
+    public int vy;
     public double distance; 
 }
 
@@ -46,12 +50,18 @@ public class Situation
         List <Spider> orderThreat = threatSpiders.OrderBy(o=>o.distance).ToList();
         List <Spider> orderDanger = dangerSpiders.OrderBy(o=>o.distance).ToList();   
     
+
+        foreach(Spider spider in orderDanger){
+
+            
+              Console.Error.WriteLine("Trajctory " + spider.id + " = " +  +spider.vx + " "  + spider.vy);
+
+        }
+
         // WHEN NO Spider in our base
         if(spiderNumber == 0 ){
 
-            foreach(Spider spider in orderThreat){
-                Console.Error.WriteLine("Threat distance"  + spider.id + " :" + spider.distance);
-            }
+           
             
             //NO Spider threatning 
             if(threatNumber == 0){
@@ -65,7 +75,7 @@ public class Situation
 
             //Kill the closest Spider threatning
             if(threatNumber == 1 ){
-
+              
                 if(threatSpiders[0].posX < 7000 && threatSpiders[0].posY < 5000){
                 Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY);
                 Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY);
@@ -100,7 +110,7 @@ public class Situation
                 foreach(Spider spider in threatSpiders){
                    
                     if(spider.posX < 7000  && spider.posY < 5000 ){
-                        Console.WriteLine("MOVE " + spider.posX + " " + spider.posY);
+                        Console.WriteLine("MOVE " + spider.posX + " " + spider.posY );
                     }else{
                         Console.WriteLine("WAIT");
                     }
@@ -170,6 +180,7 @@ class Player
         int baseY = int.Parse(inputs[1]);
         int heroesPerPlayer = int.Parse(Console.ReadLine()); // Always 3
 
+       
 
 
         
@@ -188,6 +199,7 @@ class Player
         // game loop
         while (true)
         {
+             Console.Error.WriteLine("Base :" + baseX);
            
            
         Situation situation = new Situation(); 
@@ -235,7 +247,10 @@ class Player
                     person.posX=x;
                     person.posY=y;
                     person.health=health;
+                    person.vx = vx;
+                    person.vy= vy;
                     person.distance=findDistance(x, y);
+
                     
                     heroes[id] = person; 
                 } 
@@ -249,6 +264,8 @@ class Player
                     spider.posY = y; 
                     spider.threatFor= threatFor; 
                     spider.nearBase= nearBase;
+                    spider.vx = vx; 
+                    spider.vy = vy;
                     spider.distance=findDistance(x,y);
                     if(nearBase==1){
                         dangerSpiders.Add(spider);
