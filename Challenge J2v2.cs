@@ -15,11 +15,20 @@ public class Person
     public int posY { get; set; }
     public int health { get; set; }
     public string role { get; set; }
-    public string[] roles = {"top", "middle", "bottom"};
+    
 
 }
 
 
+public class Spider{
+    public int id; 
+    public int posX; 
+    public int posY; 
+    public int threatFor; 
+    public int nearBase; 
+    public int health;
+
+}
 
 
 
@@ -28,117 +37,54 @@ public class Person
 public class Situation
 {
 
-    public int nearBase;
-    public int posEnemyX;
-    public int posEnemyY;
+    public void checkIfDanger (List<Spider> dangerSpiders){
 
+        int spiderNumber = dangerSpiders.Count; 
 
+        if(spiderNumber == 0){
 
-}
-
-
-public class Strategy
-{
-    public int nearBase; 
-
-    public int positionAttackX=5080;
-    public int positionStackX=4700;
-    public int positionDefendX=400;
-     
-
-    public Dictionary <int,int> positionY = new Dictionary<int, int>(){
-
-            {01, 400},
-            {02, 4000},
-            {03, 6100},
-     };
-        
-         //   
-            
-        
-
-    public int topLanerY= 400;
-    public int MiddleLanerY=2100;
-    public int BottomLanerY= 3000;
-
-
-    Random rnd = new Random();
-   
-
-
-    Person hero;
-
-    //Define 3 fonction checkStrat
-
-
-    
-    
-
-
-    
-    public void checkStrategy(Person hero){
-
-  
-
-
-    int randomMove = rnd.Next(-100, 100);
-    int moveA= randomMove + positionAttackX;
-    int moveD= randomMove + positionDefendX;  
-  
-  
-  
-        if(hero.id==0 ){
-            if(hero.posX<positionStackX){
-               
-                Console.WriteLine("MOVE " + moveA + " " + topLanerY );
-
-            }else{
-                Console.WriteLine("MOVE " +  moveD + " " + topLanerY );
+            for(int i=0; i<3; i++){
+                Console.WriteLine("WAIT");
             }
-        }
-        
-        else if (hero.id==1){
-            // CHECK Strat TOP
-            if(hero.posX<positionStackX){
-                Console.WriteLine("MOVE " + moveA + " " + MiddleLanerY );
-            }else{
-                Console.WriteLine("MOVE " + moveD + " " + MiddleLanerY );
-            }
+
 
         }
 
-        else if(hero.id==2){
+        if(spiderNumber == 1 ){
+             for(int i=0; i<3; i++){
+                Console.WriteLine("MOVE " + dangerSpiders[0].posX + " " + dangerSpiders[0].posY);
+            }
+        }
+
+
+        if(spiderNumber == 2 ){
+            Console.WriteLine("MOVE " + dangerSpiders[0].posX + " " + dangerSpiders[0].posY);
+            Console.WriteLine("MOVE " + dangerSpiders[0].posX + " " + dangerSpiders[0].posY);
+            Console.WriteLine("MOVE " + dangerSpiders[1].posX + " " + dangerSpiders[1].posY);
+
+
+
+        }
+
+        if(spiderNumber >= 3 ){
+            Console.WriteLine("MOVE " + dangerSpiders[0].posX + " " + dangerSpiders[0].posY);
+            Console.WriteLine("MOVE " + dangerSpiders[1].posX + " " + dangerSpiders[1].posY);
+            Console.WriteLine("MOVE " + dangerSpiders[2].posX + " " + dangerSpiders[2].posY);
+        }
+
+      
            
-            if(hero.posX<positionStackX){
-                Console.WriteLine("MOVE " + moveA + " " + MiddleLanerY );
-            }else{
-                Console.WriteLine("MOVE " + moveD + " " + MiddleLanerY );
-            }
-          
-        } 
-
+               
         
-    }
-    
-    
-    /*public void retreat(){
 
-        Console.WriteLine("MOVE" + positionDefendX );
-    }
-    
+        }
 
-    public void Defend(){
-        Console.WriteLine("MOVE" + positionStackX);
-    }
 
-    public void Attack(){
-        Console.WriteLine("MOVE"  + positionAttackX);
-    }
 
-    public void Stand(){
-        Console.WriteLine("WAIT");
-    }*/
+
 }
+
+
 
 
 
@@ -167,9 +113,11 @@ class Player
         while (true)
         {
            
-
+           
+        Situation situation = new Situation(); 
         Person[] heroes = new Person[3];
-
+        List <Spider>  dangerSpiders = new List <Spider>(); 
+   
 
             for (int i = 0; i < 2; i++)
             {
@@ -214,18 +162,29 @@ class Player
                     heroes[id] = person; 
                 } 
 
-                //STORE DATA 
-                Strategy roundStrat = new Strategy();
-                roundStrat.nearBase= nearBase;
 
+                //Store Spiders 
+                if (type== 0 && nearBase==1){
+                    Spider spider= new Spider(); 
+                    spider.id = id; 
+                    spider.posX= x;
+                    spider.posY = y; 
+                    spider.threatFor= threatFor; 
+                    spider.nearBase= nearBase;
+                    dangerSpiders.Add(spider);
+                }
 
-                // Catch the situation 
-                Situation situation = new Situation();
-                situation.nearBase = nearBase;
-                if()
-                situation.posEnemyX
+              
+                
+
+             
             }
 
+
+        
+           
+
+            situation.checkIfDanger(dangerSpiders); 
 
 
 
@@ -234,18 +193,7 @@ class Player
                 // Find all Person instances 
                 //Check Action todo
                 //Write in console the action 
-                
-
-                foreach(Person hero in heroes) {
-
-                    hero.role = hero.roles[hero.id];
-                    
-                    Strategy strat = new Strategy();  
-                    strat.checkStrategy(hero);
-                    Console.Error.WriteLine(strat.positionY[2]);
-                   
-                }
-
+                Console.Error.WriteLine("Hero" +  heroes[i].id + ":" + heroes[i].posX + "," +  heroes[i].posY)
 
                 // Write an action using Console.WriteLine()
                 // To debug: Console.Error.WriteLine("Debug messages...");
