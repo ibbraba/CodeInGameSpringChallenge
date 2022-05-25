@@ -41,22 +41,40 @@ public class Spider{
 public class Situation
 {
 
+       public int baseX; 
+       public int baseY; 
+
+       public int limitX;
+       public int limitY; 
+
+
         public void checkIfDanger (List<Spider> dangerSpiders, List<Spider> threatSpiders){
 
+            
+    
         int spiderNumber = dangerSpiders.Count; 
         int threatNumber = threatSpiders.Count; 
 
+
         //Find The closest enemy from our base
+       
+
         List <Spider> orderThreat = threatSpiders.OrderBy(o=>o.distance).ToList();
         List <Spider> orderDanger = dangerSpiders.OrderBy(o=>o.distance).ToList();   
-    
 
-        foreach(Spider spider in orderDanger){
-
-            
-              Console.Error.WriteLine("Trajctory " + spider.id + " = " +  +spider.vx + " "  + spider.vy);
+      
+        if(baseX <4000){
+        orderThreat = orderThreat.OrderByDescending(o=>o.distance).ToList();
+        orderDanger = orderDanger.OrderByDescending(o=>o.distance).ToList();
 
         }
+        
+    
+
+        
+    
+
+      
 
         // WHEN NO Spider in our base
         if(spiderNumber == 0 ){
@@ -67,7 +85,7 @@ public class Situation
             if(threatNumber == 0){
                 
                 for(int i=0; i<3; i++){
-                    Console.WriteLine("WAIT");
+                    Console.WriteLine("WAIT no danger");
                 }
                 
 
@@ -76,40 +94,48 @@ public class Situation
             //Kill the closest Spider threatning
             if(threatNumber == 1 ){
               
-                if(threatSpiders[0].posX < 7000 && threatSpiders[0].posY < 5000){
-                Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY);
-                Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY);
+                //if(threatSpiders[0].posX <  && threatSpiders[0].posY < 5000){
+                Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY + " kill threat1");
+                Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY + " kill threat1");
                 Console.WriteLine("WAIT");
-                }else{
+              /*  }else{
                         for(int i=0; i<3; i++){
                         Console.WriteLine("WAIT");
                         }
+                */
                 
-                }
             }
 
             
-            if(threatNumber == 2 ){
-                foreach(Spider spider in orderThreat){
+            if(threatNumber == 2 || threatNumber > 2){
+               Console.Error.WriteLine("2 threats");
+
+                Console.WriteLine("MOVE " +  orderThreat[0].posX + " " + orderThreat[0].posX  + " kill threat 2+");
+
+                Console.WriteLine("MOVE " + orderThreat[1].posX + " " + orderThreat[1].posX + " kill threat 2+" );
+
+                Console.WriteLine("MOVE " + " " + baseX + " " + baseY); 
+            }   
+                /*    foreach(Spider spider in orderThreat){
                    
                     if(spider.posX < 7000  && spider.posY < 5000 ){
                         Console.WriteLine("MOVE " + spider.posX + " " + spider.posY);
-                    }else{
+                   }else{
                         Console.WriteLine("WAIT");
+                    //}
                     }
-                }
 
-                Console.WriteLine("WAIT");
-            }
+                Console.WriteLine("WAIT"); */
+            
               
             
 
-
+/*
             if(threatNumber == 3 || threatNumber > 3){
 
-                foreach(Spider spider in threatSpiders){
+                foreach(Spider spider in orderThreat){
                    
-                    if(spider.posX < 7000  && spider.posY < 5000 ){
+                    if(spider.posX < limitX  && spider.posY < 5000 ){
                         Console.WriteLine("MOVE " + spider.posX + " " + spider.posY );
                     }else{
                         Console.WriteLine("WAIT");
@@ -117,7 +143,7 @@ public class Situation
                 }
 
             }
-              
+              */
             
 
         }
@@ -126,16 +152,16 @@ public class Situation
         //ONE Spider in base       
         if(spiderNumber == 1 ){
              for(int i=0; i<3; i++){
-                Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY);
+                Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger1");
             }
         }
 
 
         //TWO Spiders in base
         if(spiderNumber == 2 ){
-            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY);
-            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY);
-            Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY);
+            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger2");
+            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger2");
+            Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger2");
 
 
 
@@ -143,9 +169,9 @@ public class Situation
 
         //Three or more spiders in base
         if(spiderNumber == 3 || spiderNumber > 3  ){
-            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY);
-            Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY);
-            Console.WriteLine("MOVE " + orderDanger[2].posX + " " + orderDanger[2].posY);
+            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger3" + orderDanger[0].id );
+            Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger3" + orderDanger[1].id ) ;
+            Console.WriteLine("MOVE " + orderDanger[2].posX + " " + orderDanger[2].posY + " kill danger3" + orderDanger[2].id);
         }
 
       
@@ -153,7 +179,7 @@ public class Situation
                
         
 
-        }
+}
 
 
 
@@ -196,6 +222,8 @@ class Player
         }
 
 
+
+        Console.Error.WriteLine(baseX + " " + baseY);
         // game loop
         while (true)
         {
@@ -203,7 +231,9 @@ class Player
            
            
         Situation situation = new Situation(); 
-        Person[] heroes = new Person[3];
+        situation.baseX = baseX; 
+        situation.baseY = baseY; 
+        List <Person> allies = new List <Person>();
         List <Spider>  dangerSpiders = new List <Spider>(); 
         List <Spider> threatSpiders = new List<Spider>();
    
@@ -252,7 +282,7 @@ class Player
                     person.distance=findDistance(x, y);
 
                     
-                    heroes[id] = person; 
+                    allies.Add(person); 
                 } 
 
 
@@ -267,7 +297,7 @@ class Player
                     spider.vx = vx; 
                     spider.vy = vy;
                     spider.distance=findDistance(x,y);
-                    if(nearBase==1){
+                    if(nearBase==1 && threatFor ==1){
                         dangerSpiders.Add(spider);
                     }    
 
@@ -278,6 +308,7 @@ class Player
                     }
                     
                 }
+                 
 
                
 
