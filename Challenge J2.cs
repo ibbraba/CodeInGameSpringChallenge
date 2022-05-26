@@ -43,18 +43,18 @@ public class Situation
 
        public int baseX; 
        public int baseY; 
-
-       public int limitX;
-       public int limitY; 
+       public int mana;
 
 
-        public void checkIfDanger (List<Spider> dangerSpiders, List<Spider> threatSpiders){
+    public void checkIfDanger (List<Spider> dangerSpiders, List<Spider> threatSpiders, Person hero0, Person hero1){
 
             
     
         int spiderNumber = dangerSpiders.Count; 
         int threatNumber = threatSpiders.Count; 
 
+        int enemyBaseX = 17630-baseX;
+        int enemyBaseY = 9000-baseY;
 
         //Find The closest enemy from our base
        
@@ -63,33 +63,22 @@ public class Situation
         List <Spider> orderDanger = dangerSpiders.OrderBy(o=>o.distance).ToList();   
 
       
-        if(baseX <4000){
+        if(baseX  > 4000){
         orderThreat = orderThreat.OrderByDescending(o=>o.distance).ToList();
         orderDanger = orderDanger.OrderByDescending(o=>o.distance).ToList();
-
-        }
+         }
         
-    
-
-        
-    
-
-      
-
-        // WHEN NO Spider in our base
+      // WHEN NO Spider in our base
         if(spiderNumber == 0 ){
-
-           
-            
             //NO Spider threatning 
             if(threatNumber == 0){
                 
-                for(int i=0; i<3; i++){
+            for(int i=0; i<2; i++){
                     Console.WriteLine("WAIT no danger");
                 }
                 
 
-            }
+            } 
 
             //Kill the closest Spider threatning
             if(threatNumber == 1 ){
@@ -97,7 +86,7 @@ public class Situation
                 //if(threatSpiders[0].posX <  && threatSpiders[0].posY < 5000){
                 Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY + " kill threat1");
                 Console.WriteLine("MOVE " + orderThreat[0].posX + " " + orderThreat[0].posY + " kill threat1");
-                Console.WriteLine("WAIT");
+               
               /*  }else{
                         for(int i=0; i<3; i++){
                         Console.WriteLine("WAIT");
@@ -108,50 +97,21 @@ public class Situation
 
             
             if(threatNumber == 2 || threatNumber > 2){
-               Console.Error.WriteLine("2 threats");
-
+              
                 Console.WriteLine("MOVE " +  orderThreat[0].posX + " " + orderThreat[0].posX  + " kill threat 2+");
 
                 Console.WriteLine("MOVE " + orderThreat[1].posX + " " + orderThreat[1].posX + " kill threat 2+" );
 
-                Console.WriteLine("MOVE " + " " + baseX + " " + baseY); 
+               
             }   
-                /*    foreach(Spider spider in orderThreat){
-                   
-                    if(spider.posX < 7000  && spider.posY < 5000 ){
-                        Console.WriteLine("MOVE " + spider.posX + " " + spider.posY);
-                   }else{
-                        Console.WriteLine("WAIT");
-                    //}
-                    }
-
-                Console.WriteLine("WAIT"); */
-            
-              
-            
-
-/*
-            if(threatNumber == 3 || threatNumber > 3){
-
-                foreach(Spider spider in orderThreat){
-                   
-                    if(spider.posX < limitX  && spider.posY < 5000 ){
-                        Console.WriteLine("MOVE " + spider.posX + " " + spider.posY );
-                    }else{
-                        Console.WriteLine("WAIT");
-                    }
-                }
-
-            }
-              */
+                
             
 
         }
 
-       
-        //ONE Spider in base       
+       //ONE Spider in base       
         if(spiderNumber == 1 ){
-             for(int i=0; i<3; i++){
+             for(int i=0; i<2; i++){
                 Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger1");
             }
         }
@@ -160,30 +120,154 @@ public class Situation
         //TWO Spiders in base
         if(spiderNumber == 2 ){
             Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger2");
-            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger2");
             Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger2");
-
-
-
+           
         }
 
         //Three or more spiders in base
         if(spiderNumber == 3 || spiderNumber > 3  ){
-            Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger3" + orderDanger[0].id );
-            Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger3" + orderDanger[1].id ) ;
-            Console.WriteLine("MOVE " + orderDanger[2].posX + " " + orderDanger[2].posY + " kill danger3" + orderDanger[2].id);
+            
+            //defensive Spell
+            if(mana > 10 ){
+                
+                int spiderNearHero0 = 0;
+                int spiderNearHero1 = 0;
+             
+                foreach (Spider spider in orderDanger){
+                    double distanceToHero0 = hero0.distance - spider.distance;
+                    double distanceToHero1 = hero0.distance - spider.distance;
+
+                    if(distanceToHero0 > -1280 && distanceToHero0 < 1280 ){
+                        spiderNearHero0 ++; 
+                    }
+
+                    if(distanceToHero1 > -1280 && distanceToHero1 < 1280 ){
+                        spiderNearHero1 ++; 
+                    }
+                }
+
+
+                //Check if most dangerous spiider is in range 
+
+                int spiderInRange0 = hero0.posX - orderDanger[0].posX;
+                int spiderInRange1 = hero1.posX - orderDanger[0].posX;
+
+                //Choose which defender to launch spell with 
+                if(spiderNearHero0 < spiderNearHero1 && spiderInRange0 > -640 && spiderInRange0 < 640  ){
+                    Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill hero0 " + orderDanger[0].id );
+                    Console.WriteLine("SPELL WIND " + enemyBaseX + " " + enemyBaseY + " SPELL DEFENSE" +orderDanger[0].id );
+                }else if (spiderNearHero0 >= spiderNearHero1 && spiderInRange1 > -640 && spiderInRange1 < 640 )
+                {
+                    Console.WriteLine("SPELL WIND " + enemyBaseX + " " + enemyBaseY + " SPELL DEFENSE"+orderDanger[0].id );
+                    Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill hero1 " + orderDanger[0].id );
+                }else{
+                    Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " DEFENSE " + orderDanger[0].id );
+                    Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " DEFENSE " + orderDanger[0].id ) ;
+                }
+
+
+
+            }else{
+                Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill ID " + orderDanger[0].id );
+                Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill ID " + orderDanger[1].id ) ;
+                }
+            
+       //     Console.WriteLine("MOVE " + orderDanger[2].posX + " " + orderDanger[2].posY + " kill danger3" + orderDanger[2].id);
         }
+    }
 
-      
-           
-               
+        public void attackEnemyBase(Person hero2 , List<Spider> enemySpiders, List<Spider> neutralSpiders){ 
+
+
+            int enemySpidersCount = enemySpiders.Count();
+            int neutralSpidersCount = neutralSpiders.Count();
+
+            int windDirection = - 200; 
+            int enemyBaseX = 17630-baseX;
+            int enemyBaseY = 9000-baseY;
+            //bool closeToEnemyID=false;
+
+            bool heroCommanded = false;  
+
+            List <Spider> orderEnemy = enemySpiders.OrderByDescending(o=>o.distance).ToList();
+            List <Spider> orderNeutral = neutralSpiders.OrderByDescending(o=>o.distance).ToList();
         
+            if(baseX > 4000){
+            orderEnemy = orderEnemy.OrderBy(o=>o.distance).ToList();
+            orderNeutral = orderNeutral.OrderBy(o=>o.distance).ToList();
+            
+            //Define where to place our hero to spell a mignon in oppenent base trajectory 
+            windDirection = 200;
+            }
+            Console.Error.WriteLine("Ennemies : " + enemySpidersCount + " Neutral : " + neutralSpidersCount);
 
-}
+              //FARM IF ENEMY BASE NOT THREATEND
+
+                //CHECK NUMBER OF SPIDERS, ATTACK ONE Not threatning
+
+            //PUSH ENEMY IF NEAR BASE AND MANA AVAILABLE
+
+            //PUSH ENEMY IF IN BASE AND MANA AVAILABLE
+        
+            if( enemySpidersCount > 0 && heroCommanded == false){ 
+
+                // Define if a spell has already been thrown this round 
+               foreach(Spider spider in orderEnemy){
+                        //Check if spider can be spelled
+                        double distanceHeroToSpider = hero2.distance - spider.distance;
+                        //Check if distance is close and mana available
+                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 10){
+                               Console.WriteLine("SPELL WIND " + enemyBaseX  + " " + enemyBaseY + " Spell enemy" ); 
+                               heroCommanded = true;
+                        }
+
+
+                }
+
+                //If no spider close get close to the most enemy threatning spider 
+
+                if(heroCommanded == false){ 
+                    int  x = orderEnemy[enemySpidersCount-1].posX+windDirection;
+                    int y = orderEnemy[enemySpidersCount-1].posY+windDirection;
+                    Console.WriteLine("MOVE " + x + " " + y +  " get close");
+                    heroCommanded = true;
+                }
+            }
+             
+
+            if( neutralSpidersCount > 0 && heroCommanded == false){
+                
+            
+                foreach(Spider spider in orderNeutral){
+                        //Check if spider can be spelled
+                        double distanceHeroToSpider = hero2.distance - spider.distance;
+                        //Check if distance is close and mana available
+                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 10){
+                               Console.WriteLine("SPELL WIND " + enemyBaseX  + " " + enemyBaseY + " Spell neutral" ); 
+                               heroCommanded = true;
+                        }
+                }
+
+                // Kill the closest spider from our base
+                 if(heroCommanded == false){ 
+                         int spiderCount = orderNeutral.Count;
+                         int x = orderNeutral[0].posX+windDirection;
+                         int y = orderNeutral[0].posY+windDirection;
+                        Console.WriteLine("MOVE " +x + " " + y + " close neutral");
+                        heroCommanded = true;
+                    }
+
+          
+            }
+
+            if (neutralSpidersCount == 0 && enemySpidersCount == 0){
+                Console.WriteLine("MOVE 9000 4500 Deploy");
+            }
 
 
 
-
+        }
+            
 }
 
 
@@ -223,27 +307,37 @@ class Player
 
 
 
-        Console.Error.WriteLine(baseX + " " + baseY);
         // game loop
         while (true)
         {
-             Console.Error.WriteLine("Base :" + baseX);
+             
            
            
         Situation situation = new Situation(); 
         situation.baseX = baseX; 
         situation.baseY = baseY; 
+
+
         List <Person> allies = new List <Person>();
+
         List <Spider>  dangerSpiders = new List <Spider>(); 
         List <Spider> threatSpiders = new List<Spider>();
-   
+
+        List <Spider> enemySpiders = new List<Spider>();
+       
+        List <Spider> neutralSpiders =  new List<Spider>();
 
             for (int i = 0; i < 2; i++)
             {
                 inputs = Console.ReadLine().Split(' ');
                 int health = int.Parse(inputs[0]); // Each player's base health
                 int mana = int.Parse(inputs[1]); // Ignore in the first league; Spend ten mana to cast a spell
+                if(i == 0){
+                    situation.mana = mana;
+                }
             }
+
+            
 
 
 
@@ -306,6 +400,17 @@ class Player
                     if (nearBase == 0 && threatFor == 1 ){
                         threatSpiders.Add(spider);
                     }
+
+
+                    //GET SPIDERS ATTACKIG ENEMY BASE 
+                    if(threatFor == 2 ){ 
+                        enemySpiders.Add(spider);
+                    }
+
+                    //GET spiders in neutral zone
+                    if(nearBase == 0 ){
+                        neutralSpiders.Add(spider);
+                    }
                     
                 }
                  
@@ -327,19 +432,25 @@ class Player
             }
 
 
-        
-           
 
-            situation.checkIfDanger(dangerSpiders, threatSpiders); 
-            Console.Error.WriteLine("Base : " + dangerSpiders.Count);
+           
+            //DEFENSIVE PLAN FOR THE ROUND
+            situation.checkIfDanger(dangerSpiders, threatSpiders, allies[0], allies[1]); 
             
-            Console.Error.WriteLine("Threat : " + threatSpiders.Count);
+            //OFFENSIVE PLAN FOR THE ROUND
+       
+            situation.attackEnemyBase(allies[2] ,enemySpiders, neutralSpiders);
+
+         //   Console.Error.WriteLine("Base : " + dangerSpiders.Count);
+            
+          //  Console.Error.WriteLine("Threat : " + threatSpiders.Count);
 
 
         
         }
     }
 }
+
 
 
 
