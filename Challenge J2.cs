@@ -119,8 +119,42 @@ public class Situation
 
         //TWO Spiders in base
         if(spiderNumber == 2 ){
+          
+            //USE CONTROL IF MANA
+            if(mana> 10) {
+
+
+                double distanceToHero0 = hero0.distance - orderDanger[0].distance;
+                double distanceToHero1 = hero1.distance - orderDanger[0].distance;
+
+                bool spiderNearHero0 = false;
+                bool spiderNearHero1 = false;
+
+                     if(distanceToHero0 > -1280 && distanceToHero0 < 1280 ){
+                        spiderNearHero0=true; 
+                        Console.WriteLine("SPELL WIND " + orderDanger[0].id + " " + enemyBaseX +" " + enemyBaseY +   " CONTROL " +  orderDanger[0].id);
+                        Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger2");
+                    }
+
+                    if(distanceToHero1 > -1280 && distanceToHero1 < 1280 ){
+                        Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger2");
+                         Console.WriteLine("SPELL WIND " + orderDanger[0].id + " " + enemyBaseX +" " + enemyBaseY +   " CONTROL " +  orderDanger[0].id);
+                    }else{
+                    Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger2");
+                      Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger2");
+                    }
+
+
+                
+                
+
+               
+        }else{
             Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill danger2");
             Console.WriteLine("MOVE " + orderDanger[1].posX + " " + orderDanger[1].posY + " kill danger2");
+            }
+        
+         
            
         }
 
@@ -148,6 +182,9 @@ public class Situation
 
 
                 //Check if most dangerous spiider is in range 
+                //LOOP CHECK HOW MUCH SPIDERS IN RANGE 
+                //IF SPIDER 0 IN RANGE => PRIORITY
+                // ELSE IF 2+ SPIDER IN RANGE WIND
 
                 int spiderInRange0 = hero0.posX - orderDanger[0].posX;
                 int spiderInRange1 = hero1.posX - orderDanger[0].posX;
@@ -160,7 +197,13 @@ public class Situation
                 {
                     Console.WriteLine("SPELL WIND " + enemyBaseX + " " + enemyBaseY + " SPELL DEFENSE"+orderDanger[0].id );
                     Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill hero1 " + orderDanger[0].id );
-                }else{
+                }else if (spiderNearHero0 == spiderNearHero1 && spiderInRange0 > -640 && spiderInRange0 < 640){
+                    Console.WriteLine("SPELL WIND " + enemyBaseX + " " + enemyBaseY + " DEFENSIVE "+orderDanger[0].id );
+                    Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " kill hero1 " + orderDanger[0].id );
+                }
+                
+                
+                else{
                     Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " DEFENSE " + orderDanger[0].id );
                     Console.WriteLine("MOVE " + orderDanger[0].posX + " " + orderDanger[0].posY + " DEFENSE " + orderDanger[0].id ) ;
                 }
@@ -182,7 +225,7 @@ public class Situation
             int enemySpidersCount = enemySpiders.Count();
             int neutralSpidersCount = neutralSpiders.Count();
 
-            int windDirection = - 200; 
+            int windDirection = - 300; 
             int enemyBaseX = 17630-baseX;
             int enemyBaseY = 9000-baseY;
             //bool closeToEnemyID=false;
@@ -197,7 +240,7 @@ public class Situation
             orderNeutral = orderNeutral.OrderBy(o=>o.distance).ToList();
             
             //Define where to place our hero to spell a mignon in oppenent base trajectory 
-            windDirection = 200;
+            windDirection = 300;
             }
             Console.Error.WriteLine("Ennemies : " + enemySpidersCount + " Neutral : " + neutralSpidersCount);
 
@@ -216,7 +259,7 @@ public class Situation
                         //Check if spider can be spelled
                         double distanceHeroToSpider = hero2.distance - spider.distance;
                         //Check if distance is close and mana available
-                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 10){
+                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 20){
                                Console.WriteLine("SPELL WIND " + enemyBaseX  + " " + enemyBaseY + " Spell enemy" ); 
                                heroCommanded = true;
                         }
@@ -242,8 +285,8 @@ public class Situation
                         //Check if spider can be spelled
                         double distanceHeroToSpider = hero2.distance - spider.distance;
                         //Check if distance is close and mana available
-                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 10){
-                               Console.WriteLine("SPELL WIND " + enemyBaseX  + " " + enemyBaseY + " Spell neutral" ); 
+                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 20){
+                               Console.WriteLine("SPELL CONTROL " + spider.id + " "+ enemyBaseX  + " " + enemyBaseY + " Spell neutral" ); 
                                heroCommanded = true;
                         }
                 }
