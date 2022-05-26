@@ -231,6 +231,30 @@ public class Situation
             int windDirection = - 201; 
             int enemyBaseX = 17630-baseX;
             int enemyBaseY = 9000-baseY;
+
+            int spyBottomX; 
+            int spyBottomY; 
+
+            int spyTopX;
+            int spyTopY;
+
+            bool positionTop; 
+
+            if (enemyBaseX == 17630){
+                spyBottomX = 14300; 
+                spyBottomY = 8500;
+
+                spyTopX =17250;
+                spyTopY = 4250;
+            }else{ 
+                spyBottomX = 3500; 
+                spyBottomY = 630;
+
+                spyTopX =3000;
+                spyTopY = 200;
+
+            }
+
             //bool closeToEnemyID=false;
 
             bool heroCommanded = false;  
@@ -261,7 +285,7 @@ public class Situation
 
             //PIORITY
 
-            if(enemiesHeroesCount > 0){ 
+         /*   if(enemiesHeroesCount > 0 && potentialEnemiesCount > 0){ 
 
               foreach(Person enemy in enemiesHeroes){
 
@@ -280,7 +304,7 @@ public class Situation
                     heroCommanded=true; 
                 }
 
-            }
+            } */ 
 
 
 
@@ -293,7 +317,7 @@ public class Situation
                      //Check if spider can be spelled
                     double distanceHeroToSpider = hero2.distance - enemy.distance;
 
-                    if(distanceHeroToSpider > -640 && distanceHeroToSpider < 640 && heroCommanded == false && mana > 10){
+                    if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 10){
 
                             //IF ENEEMY CONTROL AWAY
 
@@ -301,7 +325,7 @@ public class Situation
                             //IF NEARBASE PROTECT 
 
                        if( enemy.threatFor==2 && enemy.nearBase == 1  ){
-                        Console.WriteLine("SPELL SHIELD " + enemy.id + " SHIELD " + enemy.id);
+                        Console.WriteLine("SPELL WIND " + enemyBaseX + " " +  enemyBaseY + " WIND " + enemy.id);
                         heroCommanded =true; 
                         } else if(enemy.threatFor==0){
                              Console.WriteLine("SPELL CONTROL " + enemy.id + " " + enemyBaseX + " " + enemyBaseY +  " CONTROL " + enemy.id);
@@ -333,14 +357,14 @@ public class Situation
                         //Check if spider can be spelled
                         double distanceHeroToSpider = hero2.distance - spider.distance;
                         //Check if distance is close and mana available
-                        if(distanceHeroToSpider > -640 && distanceHeroToSpider < 640 && heroCommanded == false && mana > 20){
+                        if(distanceHeroToSpider > -1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 20){
                                Console.WriteLine("SPELL WIND " + enemyBaseX  + " " + enemyBaseY + " Spell enemy" ); 
                                heroCommanded = true;
                         }
 
 
                 }
-
+ 
                 //If no spider close get close to the most enemy threatning spider 
 
                 if(heroCommanded == false){ 
@@ -360,27 +384,62 @@ public class Situation
                         //Check if spider can be spelled
                         double distanceHeroToSpider = hero2.distance - spider.distance;
                         //Check if distance is close and mana available
-                        if(distanceHeroToSpider > 640 && distanceHeroToSpider < 640 && heroCommanded == false && mana > 20){
+                        if(distanceHeroToSpider > 1280 && distanceHeroToSpider < 1280 && heroCommanded == false && mana > 20){
                                Console.WriteLine("SPELL CONTROL " + spider.id + " "+ enemyBaseX  + " " + enemyBaseY + " Spell neutral" ); 
                                Console.Error.WriteLine("CAN ATTACK ID" + spider.id);
                                heroCommanded = true;
                         }
                 }
-
+                int spiderCount = orderNeutral.Count;
                 // Kill the closest spider from our base
                  if(heroCommanded == false){ 
-                         int spiderCount = orderNeutral.Count;
-                         int x = orderNeutral[0].posX+windDirection;
-                         int y = orderNeutral[0].posY+windDirection;
-                        Console.WriteLine("MOVE 14000 6000" +  " SPY"  + orderNeutral[0].id);
+                         int x;
+                         int y;
+
+
+                         //Make sure attacking hero is close
+                         double isClose = hero2.distance - orderNeutral[0].distance;
+                        
+                        if( mana >= 10 && isClose> -2200 && isClose < 2200 ){
+                            x = orderNeutral[0].posX;
+                            y = orderNeutral[0].posY;
+                        Console.WriteLine("MOVE " + x + " "+ y + " MOVETO"  + orderNeutral[0].id);
                         heroCommanded = true;
+                        }else{ 
+
+
+                        if(hero2.posY < spyTopX -2000){
+                            Console.WriteLine("MOVE " + spyBottomX +" " +  spyBottomY + " SPYBOTTOM");
+
+
+                        }else{
+                            Console.WriteLine("MOVE " + spyTopX +" " +  spyTopY + " SPYTOP");
+
+                        }
+
+                        }
+                         //IF too far away from base farm 
+                         //If close ignore 
+                        
+                        /*
+
+                        else{ 
+                            x = orderNeutral[0].posX+windDirection;
+                            y = orderNeutral[0].posY+windDirection;
+                         Console.WriteLine("MOVE " + x  + " " + " " + y + " FARM");
+                        }*/
                     }
+   
 
           
             }
 
             if (neutralSpidersCount == 0 && enemySpidersCount == 0){
-                Console.WriteLine("MOVE 9000 4500 Deploy");
+                
+        
+                Console.WriteLine("MOVE " + spyBottomX +" " +  spyBottomY + " SPYLOW");
+                  
+
             }
 
 
