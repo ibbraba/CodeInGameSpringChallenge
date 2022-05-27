@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5f6bc81a-4cc2-49e1-b7e2-3de0bf83b556" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/Challenge J2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Challenge J2.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ReadMe.md" beforeDir="false" afterPath="$PROJECT_DIR$/ReadMe.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Challenge J2v2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Challenge J2v2.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +37,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1653639256414</updated>
-      <workItem from="1653639258650" duration="941000" />
+      <workItem from="1653639258650" duration="1531000" />
     </task>
     <servers />
   </component>
