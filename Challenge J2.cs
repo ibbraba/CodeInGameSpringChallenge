@@ -437,7 +437,7 @@ public class Situation
             if (neutralSpidersCount == 0 && enemySpidersCount == 0){
                 
         
-                Console.WriteLine("MOVE " + spyBottomX +" " +  spyBottomY + " SPYLOW");
+                Console.WriteLine("MOVE " + spyBottomX +" " +  spyBottomY + " HI BRO ");
                   
 
             }
